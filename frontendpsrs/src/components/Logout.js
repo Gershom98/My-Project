@@ -1,40 +1,23 @@
 import React from "react";
 
-function Logout(onLogout) {
+function Logout({ onLogout }) {
+
   const handleLogout = async () => {
-    const token = localStorage.getItem("token");
+    await fetch("http://127.0.0.1:8000/api/logout", {
+      method: "POST",
+      headers: {
+        "Authorization": "Bearer " + localStorage.getItem("token"),
+        "Accept": "application/json",
+      },
+    });
 
-    if (!token) {
-      alert("You are not logged in");
-      return;
-    }
-
-    try {
-      const res = await fetch("http://127.0.0.1:8000/api/logout", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "Accept": "application/json",
-          "Authorization": `Bearer ${token}`
-        },
-      });
-
-      if (res.ok) {
-        localStorage.removeItem("token");
-        alert("Logged out successfully");
-      } else {
-        alert("Logout failed");
-      }
-    } catch (error) {
-      console.error(error);
-      alert("An error occurred");
-    }
+    localStorage.removeItem("token");
+    alert("Logged out");
+    onLogout(); // 🔁 BACK TO LOGIN
   };
 
   return (
-    <button onClick={handleLogout}>
-      Logout
-    </button>
+    <button onClick={handleLogout}>Logout</button>
   );
 }
 

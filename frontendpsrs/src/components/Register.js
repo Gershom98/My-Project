@@ -1,6 +1,6 @@
 import React from "react";
 
-function Register(onRegister) {
+function Register({ onSuccess }) {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -9,32 +9,43 @@ function Register(onRegister) {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        "Accept": "application/json"
+        "Accept": "application/json",
       },
       body: JSON.stringify({
         name: e.target.name.value,
         email: e.target.email.value,
         password: e.target.password.value,
-        confirm_password: e.target.confirm_password.value,
+        password_confirmation: e.target.password_confirmation.value,
       }),
     });
 
-    const data = await res.json();
-
     if (res.ok) {
-      localStorage.setItem("token", data.token);
-      alert("Registered successfully");
-    } else {
-      alert(data.message || "Registration failed");
+      alert("Registration successful. Please login.");
+      onSuccess(); // 🔁 REDIRECT TO LOGIN
     }
   };
 
   return (
     <form onSubmit={handleSubmit}>
-      <input type="text" name="name" placeholder="Enter your name" /><br />
-      <input type="email" name="email" placeholder="Enter your email" /><br />
-      <input type="password" name="password" placeholder="Enter password" /><br />
-      <input type="password" name="confirm_password" placeholder="Confirm password" /><br />
+      <h2>Register</h2>
+
+      <input name="name" placeholder="Enter your name" required />
+      <br />
+
+      <input name="email" type="email" placeholder="Email" required />
+      <br />
+
+      <input name="password" type="password" placeholder="Password" required />
+      <br />
+
+      <input
+        name="password_confirmation"
+        type="password"
+        placeholder="Confirm password"
+        required
+      />
+      <br /><br />
+
       <button type="submit">Register</button>
     </form>
   );
